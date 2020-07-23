@@ -6,7 +6,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "users")
-class Users(
+data class Users(
         @Column(name = "user_id", nullable = false, unique = true)
         var userid: String,
         @get:JsonIgnore

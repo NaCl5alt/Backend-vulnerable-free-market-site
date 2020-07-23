@@ -6,7 +6,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "item")
-class Item(
+data class Item(
         @Column(nullable = false)
         var name: String,
         @Column(nullable = false)

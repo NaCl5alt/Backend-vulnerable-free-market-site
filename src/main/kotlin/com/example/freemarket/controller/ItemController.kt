@@ -16,7 +16,7 @@ import java.util.*
 @RestController
 class ItemController(private val userservice: UserService, private val itemservice: ItemService) {
     @PostMapping("/item")
-    fun regist(@RequestBody reqitem: RequestItem): ResponseEntity<Item>{
+    fun regist(@RequestBody reqitem: RequestItem): ResponseEntity<RequestItem>{
         logger.info("regist item")
 
         val user = userservice.findByUserid(reqitem.exhibitorid) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
