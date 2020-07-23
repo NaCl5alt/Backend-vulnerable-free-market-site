@@ -1,6 +1,5 @@
 package com.example.freemarket.model
 
-import java.io.Serializable
 import java.util.*
 import javax.persistence.*
 
@@ -8,9 +7,9 @@ import javax.persistence.*
 @Entity
 @Table(name = "item")
 class Item(
-        @Id @GeneratedValue(strategy = GenerationType.AUTO)
-        var id: UUID,
+        @Column(nullable = false)
         var name: String,
+        @Column(nullable = false)
         var explanation: String,
         @ManyToOne
         @JoinTable(
@@ -19,8 +18,19 @@ class Item(
                 inverseJoinColumns = arrayOf(JoinColumn(name = "user_id"))
         )
         var exhibitor: Users,
+        @Column(nullable = false)
+        var price: Int,
+        var img: String,
+        @Id @GeneratedValue(strategy = GenerationType.AUTO)
+        var id: UUID=UUID.randomUUID()
+) {
+    constructor(): this("","", Users(),0,"",UUID.randomUUID())
+}
+
+data class RequestItem(
+        var name: String,
+        var explanation: String,
+        var exhibitorid: String,
         var price: Int,
         var img: String
-) : Serializable/*{
-    constructor(): this(UUID.randomUUID(),"","", Users(),0,"")
-}*/
+)

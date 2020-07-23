@@ -8,14 +8,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserServiceImpl(private val repository: UsersRepository) : UserService {
-    /*
-    @Autowired
-    private lateinit var bpassencode: BCryptPasswordEncoder
-    */
-
     @Transactional(timeout = 10)
-    override fun store(user: Users) {
-        //user.pass = bpassencode.encode(user.pass)
+    override fun save(user: Users) {
         repository.save(user)
     }
 
@@ -23,5 +17,8 @@ class UserServiceImpl(private val repository: UsersRepository) : UserService {
         return repository.findByUserid(userid)
     }
 
+    override fun findAll(): Iterable<Users>? {
+        return repository.findAll()
+    }
 
 }

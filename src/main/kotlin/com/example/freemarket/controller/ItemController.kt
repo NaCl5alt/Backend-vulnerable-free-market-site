@@ -1,34 +1,33 @@
 package com.example.freemarket.controller
 
+import com.example.freemarket.logger
 import com.example.freemarket.model.Item
+import com.example.freemarket.model.RequestItem
 import com.example.freemarket.repo.ItemRepository
 import com.example.freemarket.repo.UsersRepository
+import com.example.freemarket.service.ItemService
+import com.example.freemarket.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-class ItemController {
-    @Autowired
-    lateinit var repository: ItemRepository
+class ItemController(private val userservice: UserService, private val itemservice: ItemService) {
+    @PostMapping("/item")
+    fun regist(@RequestBody reqitem: RequestItem): ResponseEntity<Item>{
+        logger.info("regist item")
 
-    @Autowired
-    lateinit var repository2: UsersRepository
+        val user = userservice.findByUserid(reqitem.exhibitorid) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
 
-    @RequestMapping("/item")
-    fun findAll() = repository.findAll()
-
-    @RequestMapping("/item/save")
-    fun save(): String {
-        val user = repository2.findByUserid("test")
-        if (user == null) return "user null"
-        var item = Item(UUID.randomUUID(), "test", "test", user, 100, "test")
-        repository.save(item)
-        return "Done"
+        val item = Item(reqitem.name,reqitem.explanation,user,reqitem.price,reqitem.img)
+        itemservice.save(item)
+        return ResponseEntity(HttpStatus.CREATED)
     }
+    @GetMapping("/item")
+    fun findAll() = itemservice.findAll()
 
-    @RequestMapping("/item/{id}")
-    fun findById(@PathVariable id: UUID) = repository.findById(id)
+    @GetMapping("/item/{id}")
+    fun findById(@PathVariable id: UUID) = itemservice.findById(id)
 }
