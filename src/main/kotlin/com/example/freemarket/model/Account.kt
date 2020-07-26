@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.userdetails.UserDetails
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
@@ -21,7 +22,11 @@ data class Account(
         var roleType: String="ROLE_USER",
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name="userid")
-        var users: Users=Users()
+        var users: Users=Users(),
+        @Column(nullable=false, updatable = false)
+        var created_at: LocalDateTime= LocalDateTime.now(),
+        @Column(nullable = false)
+        var updated_at: LocalDateTime= LocalDateTime.now()
 ):UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return AuthorityUtils.createAuthorityList(this.roleType)
