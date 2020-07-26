@@ -15,16 +15,19 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-class SoldItemController(private val userservice: UserService, private val solditemservice: SoldItemService) {
+class SoldItemController(private val userservice: UserService, private val solditemservice: SoldItemService, private val itemservice: ItemService) {
     @PostMapping("/solditem")
     fun regist(@RequestBody reqitem: RequestSoldItem): ResponseEntity<RequestSoldItem>{
         logger.info("regist solditem")
 
         val user1 = userservice.findByUserid(reqitem.exhibitorid)?:return ResponseEntity(HttpStatus.BAD_REQUEST)
         val user2 = userservice.findByUserid(reqitem.buyerid)?:return ResponseEntity(HttpStatus.BAD_REQUEST)
+        val item1 = itemservice.findById(reqitem.id)?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        itemservice.deleteById(reqitem.id)
 
-        val item = SoldItem(reqitem.name,reqitem.explanation,user1,user2,reqitem.price,reqitem.img)
-        solditemservice.save(item)
+        val item2 = SoldItem(reqitem.name,reqitem.explanation,user1,user2,reqitem.price,reqitem.img)
+        solditemservice.save(item2)
+
         return ResponseEntity(HttpStatus.CREATED)
     }
     @GetMapping("/solditem")

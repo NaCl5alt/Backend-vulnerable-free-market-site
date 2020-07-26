@@ -6,5 +6,6 @@ import java.util.*
 
 interface ItemRepository : CrudRepository<Item, String> {
     fun findByName(name: String): Iterable<Item>
-    fun findById(id: UUID): Item
+    fun findById(id: UUID): Item?
+    fun deleteById(id: UUID)
 }

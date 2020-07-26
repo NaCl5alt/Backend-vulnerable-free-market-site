@@ -1,5 +1,6 @@
 package com.example.freemarket.service
 
+import com.example.freemarket.model.Account
 import com.example.freemarket.model.Users
 import com.example.freemarket.repo.UsersRepository
 import org.springframework.stereotype.Service
@@ -13,12 +14,11 @@ class UserServiceImpl(private val repository: UsersRepository) : UserService {
         repository.save(user)
     }
 
-    override fun findByUserid(userid: String): Users? {
-        return repository.findByUserid(userid)
-    }
-
     override fun findAll(): Iterable<Users>? {
         return repository.findAll()
     }
 
+    override fun findByUserid(userid: String): Users? {
+        return repository.findByUserid(userid)
+    }
 }

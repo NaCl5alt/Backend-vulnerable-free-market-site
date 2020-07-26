@@ -12,7 +12,7 @@ class ItemServiceImpl(private val repository: ItemRepository): ItemService {
         return repository.findByName(name)
     }
 
-    override fun findById(id: UUID): Item {
+    override fun findById(id: UUID): Item? {
         return repository.findById(id)
     }
 
@@ -24,4 +24,11 @@ class ItemServiceImpl(private val repository: ItemRepository): ItemService {
     override fun save(item: Item) {
         repository.save(item)
     }
+
+    @Transactional(timeout = 10)
+    override fun deleteById(id: UUID){
+        repository.deleteById(id)
+    }
+
+
 }

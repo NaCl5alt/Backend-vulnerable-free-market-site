@@ -37,5 +37,6 @@ data class RequestSoldItem(
         var exhibitorid: String,
         var buyerid: String,
         var price: Int,
-        var img: String
+        var img: String,
+        var id: UUID
 )

@@ -18,11 +18,11 @@ class ItemController(private val userservice: UserService, private val itemservi
     @PostMapping("/item")
     fun regist(@RequestBody reqitem: RequestItem): ResponseEntity<RequestItem>{
         logger.info("regist item")
-
         val user = userservice.findByUserid(reqitem.exhibitorid) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
 
         val item = Item(reqitem.name,reqitem.explanation,user,reqitem.price,reqitem.img)
         itemservice.save(item)
+
         return ResponseEntity(HttpStatus.CREATED)
     }
     @GetMapping("/item")
