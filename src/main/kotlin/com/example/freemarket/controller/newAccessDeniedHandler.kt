@@ -5,8 +5,8 @@ import org.springframework.security.web.access.AccessDeniedHandler
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class newAccessDeniedHandler: AccessDeniedHandler {
+class newAccessDeniedHandler : AccessDeniedHandler {
     override fun handle(request: HttpServletRequest, response: HttpServletResponse, accessDeniedException: AccessDeniedException) {
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+        response.status = HttpServletResponse.SC_FORBIDDEN
     }
 }

@@ -5,11 +5,9 @@ import com.example.freemarket.model.Account
 import com.example.freemarket.model.RegistUser
 import com.example.freemarket.model.Users
 import com.example.freemarket.service.AccountService
-import com.example.freemarket.service.JpaAccountDetailsServiceImpl
 import com.example.freemarket.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.crypto.bcrypt.BCrypt
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 
@@ -24,7 +22,7 @@ class UserController(private val accountservice: AccountService, private val use
 
         user.pass = passwordEncoder.encode(user.pass)
 
-        accountservice.save(Account(pass = user.pass,roleType = "ROLE_USER",users = Users(userid=user.userid,name=user.name)))
+        accountservice.save(Account(pass = user.pass, roleType = "ROLE_USER", users = Users(userid = user.userid, name = user.name)))
         return ResponseEntity(HttpStatus.CREATED)
     }
 

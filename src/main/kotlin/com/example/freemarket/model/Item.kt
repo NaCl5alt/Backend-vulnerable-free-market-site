@@ -1,5 +1,6 @@
 package com.example.freemarket.model
 
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
@@ -8,24 +9,26 @@ import javax.persistence.*
 @Table(name = "item")
 data class Item(
         @Column(nullable = false)
-        var name: String,
+        var name: String = "",
         @Column(nullable = false)
-        var explanation: String,
+        var explanation: String = "",
         @ManyToOne
         @JoinTable(
                 name = "user_item",
                 joinColumns = arrayOf(JoinColumn(name = "item_id")),
                 inverseJoinColumns = arrayOf(JoinColumn(name = "user_id"))
         )
-        var exhibitor: Users,
+        var exhibitor: Users = Users(),
         @Column(nullable = false)
-        var price: Int,
-        var img: String,
+        var price: Int = 0,
+        var img: String = "",
         @Id @GeneratedValue(strategy = GenerationType.AUTO)
-        var id: UUID=UUID.randomUUID()
-) {
-    constructor(): this("","", Users(),0,"",UUID.randomUUID())
-}
+        var id: UUID = UUID.randomUUID(),
+        @Column(nullable = false, updatable = false)
+        var created_at: LocalDateTime = LocalDateTime.now(),
+        @Column(nullable = false)
+        var updated_at: LocalDateTime = LocalDateTime.now()
+)
 
 data class RequestItem(
         var name: String,

@@ -9,7 +9,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name="account")
+@Table(name = "account")
 data class Account(
         @get:JsonIgnore
         @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,15 +19,15 @@ data class Account(
         var pass: String? = "",
         @get:JsonIgnore
         var enabled: Boolean = true,
-        var roleType: String="ROLE_USER",
+        var roleType: String = "ROLE_USER",
         @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(name="userid")
-        var users: Users=Users(),
-        @Column(nullable=false, updatable = false)
-        var created_at: LocalDateTime= LocalDateTime.now(),
+        @JoinColumn(name = "userid")
+        var users: Users = Users(),
+        @Column(nullable = false, updatable = false)
+        var created_at: LocalDateTime = LocalDateTime.now(),
         @Column(nullable = false)
-        var updated_at: LocalDateTime= LocalDateTime.now()
-):UserDetails {
+        var updated_at: LocalDateTime = LocalDateTime.now()
+) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return AuthorityUtils.createAuthorityList(this.roleType)
     }

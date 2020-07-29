@@ -1,8 +1,5 @@
 package com.example.freemarket.service
 
-import com.example.freemarket.repo.AccountRepository
-import com.example.freemarket.repo.UsersRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException

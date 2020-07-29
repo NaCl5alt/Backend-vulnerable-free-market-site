@@ -1,7 +1,6 @@
 package com.example.freemarket.config
 
 import com.example.freemarket.service.JpaAccountDetailsServiceImpl
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -32,7 +31,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         http.authorizeRequests()
                 //.anyRequest().permitAll()
                 .antMatchers(HttpMethod.GET, "/user/**").authenticated()
-                .antMatchers("/user","/login").permitAll()
+                .antMatchers("/user", "/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -49,13 +48,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         http.csrf().disable()
     }
 
-
-
     @Configuration
-    protected class AuthenticationConfiguration : GlobalAuthenticationConfigurerAdapter() {
-        @Autowired
-        var accountDetailsService: JpaAccountDetailsServiceImpl? = null
-
+    protected class AuthenticationConfiguration(private var accountDetailsService: JpaAccountDetailsServiceImpl) : GlobalAuthenticationConfigurerAdapter() {
         @Throws(Exception::class)
         override fun init(auth: AuthenticationManagerBuilder) {
             auth.userDetailsService<UserDetailsService?>(accountDetailsService)

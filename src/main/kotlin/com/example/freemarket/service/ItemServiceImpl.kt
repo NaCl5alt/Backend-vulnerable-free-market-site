@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-class ItemServiceImpl(private val repository: ItemRepository): ItemService {
+class ItemServiceImpl(private val repository: ItemRepository) : ItemService {
     override fun findByName(name: String): Iterable<Item> {
         return repository.findByName(name)
     }
@@ -26,7 +26,7 @@ class ItemServiceImpl(private val repository: ItemRepository): ItemService {
     }
 
     @Transactional(timeout = 10)
-    override fun deleteById(id: UUID){
+    override fun deleteById(id: UUID) {
         repository.deleteById(id)
     }
 

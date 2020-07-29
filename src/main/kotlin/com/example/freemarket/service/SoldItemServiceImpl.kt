@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-class SoldItemServiceImpl(private val repository: SoldItemRepository): SoldItemService {
+class SoldItemServiceImpl(private val repository: SoldItemRepository) : SoldItemService {
     override fun findByName(name: String): Iterable<SoldItem> {
         return repository.findByName(name)
     }
