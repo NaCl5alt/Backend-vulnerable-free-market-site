@@ -16,20 +16,17 @@ class FileStorageImpl : FileStorage {
 
     val log = LoggerFactory.getLogger(this::class.java)
 
-    /*
     val rootLocation = Paths.get("img")
     val userLocation = Paths.get("img/user")
     val itemLocation = Paths.get("img/item")
     val solditemLocation = Paths.get("img/solditem")
 
-
+    /*
+        val rootLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img")
+        val userLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/user")
+        val itemLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item")
+        val solditemLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/solditem")
      */
-
-    val rootLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img")
-    val userLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/user")
-    val itemLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item")
-    val solditemLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/solditem")
-
     override fun store(file: MultipartFile, path: String) {
         when (path) {
             "user" -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/user/" + file.originalFilename))) Files.copy(file.inputStream, this.userLocation.resolve(file.originalFilename))

@@ -36,13 +36,15 @@ class SimpleAuthenticationSuccessHandler : AuthenticationSuccessHandler {
             account = auth.principal as Account
         }
 
-        response.status = HttpStatus.OK.value()
+        if (account.users.userid.isNotEmpty()) response.status = HttpStatus.OK.value()
+        else response.status = HttpStatus.BAD_REQUEST.value()
+
         response.contentType = "application/json"
         var out = response.writer
 
         val tokenValue = token.createToken(account.users)
 
-        out.print("{\"token\": \"" + tokenValue + "\"}")
+        if (account.users.userid.isNotEmpty()) out.print("{\"token\": \"$tokenValue\"}")
 
         clearAuthenticationAttributes(request)
     }
