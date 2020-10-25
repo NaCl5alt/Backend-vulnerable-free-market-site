@@ -4,6 +4,7 @@ import com.example.freemarket.model.Item
 import com.example.freemarket.repo.ItemRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 import java.util.*
 
 @Service
@@ -30,5 +31,15 @@ class ItemServiceImpl(private val repository: ItemRepository) : ItemService {
         repository.deleteById(id)
     }
 
+    override fun paging(time: LocalDateTime): Iterable<Item> {
+        return repository.findTop50ByCreatedAtBeforeOrderByCreatedAtDesc(time)
+    }
 
+    override fun firstItem(): Item {
+        return repository.findTop1ByOrderByCreatedAtDesc()
+    }
+
+    override fun count(): Long {
+        return repository.count()
+    }
 }

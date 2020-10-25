@@ -6,4 +6,5 @@ import org.springframework.data.repository.CrudRepository
 
 interface AccountRepository : CrudRepository<Account, String> {
     fun findByUsers(users: Users): Account?
+    fun deleteByUsers(user: Users)
 }

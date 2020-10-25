@@ -1,15 +1,17 @@
 package com.example.freemarket.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import java.util.*
+import javax.persistence.*
 
 @Entity
 @Table(name = "users")
 data class Users(
-        @Id @Column(name = "user_id", nullable = false, unique = true)
+        @get:JsonIgnore
+        @Id @GeneratedValue(strategy = GenerationType.AUTO)
+        var id: UUID = UUID.randomUUID(),
+        @Column(name = "user_id", nullable = false, unique = true)
         var userid: String = "",
         @Column(name = "name", nullable = false)
         var name: String = "",
@@ -18,9 +20,9 @@ data class Users(
         @Column(name = "img")
         var img: String = "",
         @Column(nullable = false, updatable = false)
-        var created_at: LocalDateTime = LocalDateTime.now(),
+        var createdAt: LocalDateTime = LocalDateTime.now(),
         @Column(nullable = false)
-        var updated_at: LocalDateTime = LocalDateTime.now()
+        var updatedAst: LocalDateTime = LocalDateTime.now()
 )
 
 data class RegistUser(

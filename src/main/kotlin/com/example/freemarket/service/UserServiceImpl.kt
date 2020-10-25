@@ -20,4 +20,13 @@ class UserServiceImpl(private val repository: UsersRepository) : UserService {
     override fun findByUserid(userid: String): Users? {
         return repository.findByUserid(userid)
     }
+
+    @Transactional(timeout = 10)
+    override fun deleteByUserid(userid: String) {
+        repository.deleteByUserid(userid)
+    }
+
+    override fun findByNameContaining(name: String): Iterable<Users>? {
+        return repository.findByNameContaining(name)
+    }
 }

@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 class UserController(private val accountservice: AccountService, private val userservice: UserService, private val passwordEncoder: PasswordEncoder) {
-    @PostMapping("/user"/*, produces = [MediaType.TEXT_PLAIN_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE]*/)
+    val tokens = Token()
+
+    @PostMapping("/user")
     fun regist(@RequestBody user: RegistUser): ResponseEntity<Users> {
         logger.info("regist user")
 
@@ -27,8 +29,126 @@ class UserController(private val accountservice: AccountService, private val use
     }
 
     @GetMapping("/user")
-    fun findAll() = userservice.findAll()
+    fun findByUseridFromToken(@CookieValue token: String?): ResponseEntity<Users> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
 
-    @RequestMapping("/user/{userid}")
-    fun findByUserid(@PathVariable userid: String) = userservice.findByUserid(userid)
+        val userid = tokens.getUseridFromToken(token)
+
+        return if (verify) ResponseEntity(userservice.findByUserid(userid), HttpStatus.OK)
+        else ResponseEntity(HttpStatus.UNAUTHORIZED)
+    }
+
+    @GetMapping("/user/{userid}")
+    fun findByUserid(@CookieValue token: String?, @PathVariable userid: String): ResponseEntity<Users> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        return if (verify) ResponseEntity(userservice.findByUserid(userid), HttpStatus.OK)
+        else ResponseEntity(HttpStatus.UNAUTHORIZED)
+    }
+
+    @DeleteMapping("/user")
+    fun deleteByUserid(@CookieValue token: String?): ResponseEntity<Users> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        val userid = tokens.getUseridFromToken(token)
+        val user = userservice.findByUserid(userid) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        return if (verify) {
+            accountservice.deleteByUsers(user)
+            userservice.deleteByUserid(userid)
+            ResponseEntity(HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.UNAUTHORIZED)
+    }
+
+    @PostMapping("/user/edit")
+    fun changeByUsernameAndProfile(@CookieValue token: String?, @RequestParam name: String, @RequestParam profile: String, @RequestParam img: String): ResponseEntity<Users> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        var user = userservice.findByUserid(tokens.getUseridFromToken(token))
+                ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        if (name.isEmpty() or name.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        user.name = name
+        user.profile = profile
+        user.img = img
+
+        return if (verify) {
+            userservice.save(user)
+            ResponseEntity(HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.UNAUTHORIZED)
+
+    }
+
+    @PostMapping("/user/name")
+    fun changeByUsername(@CookieValue token: String?, @RequestParam name: String): ResponseEntity<Users> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        var user = userservice.findByUserid(tokens.getUseridFromToken(token))
+                ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        user.name = name
+
+        return if (verify) {
+            userservice.save(user)
+            ResponseEntity(HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.UNAUTHORIZED)
+    }
+
+    @PostMapping("/user/id")
+    fun changeByUserid(@CookieValue token: String?, @RequestParam userid: String): ResponseEntity<Users> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        var user = userservice.findByUserid(tokens.getUseridFromToken(token))
+                ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        user.userid = userid
+
+        return if (verify) {
+            userservice.save(user)
+            ResponseEntity(HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.UNAUTHORIZED)
+    }
+
+    @PostMapping("/user/passwd")
+    fun changeByPasswd(@CookieValue token: String?, @RequestParam passwd: String): ResponseEntity<Users> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        val userid = tokens.getUseridFromToken(token)
+        val user = userservice.findByUserid(userid) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        var account = accountservice.findByUsers(user) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        account.pass = passwordEncoder.encode(passwd)
+
+        return if (verify) {
+            accountservice.save(account)
+            ResponseEntity(HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.UNAUTHORIZED)
+    }
 }

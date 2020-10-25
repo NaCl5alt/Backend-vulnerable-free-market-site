@@ -28,13 +28,12 @@ data class SoldItem(
         @Id @GeneratedValue(strategy = GenerationType.AUTO)
         var id: UUID = UUID.randomUUID(),
         @Column(nullable = false, updatable = false)
-        var created_at: LocalDateTime = LocalDateTime.now(),
+        var createdAt: LocalDateTime = LocalDateTime.now(),
         @Column(nullable = false)
-        var updated_at: LocalDateTime = LocalDateTime.now()
+        var updatedAt: LocalDateTime = LocalDateTime.now()
 )
 
 data class RequestSoldItem(
-        var exhibitorid: String,
         var buyerid: String,
         var id: UUID
 )

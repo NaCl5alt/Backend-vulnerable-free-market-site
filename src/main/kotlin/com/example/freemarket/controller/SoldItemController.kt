@@ -17,11 +17,10 @@ class SoldItemController(private val userservice: UserService, private val soldi
     fun regist(@RequestBody reqitem: RequestSoldItem): ResponseEntity<RequestSoldItem> {
         logger.info("regist solditem")
 
-        val user1 = userservice.findByUserid(reqitem.exhibitorid) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
-        val user2 = userservice.findByUserid(reqitem.buyerid) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        val user = userservice.findByUserid(reqitem.buyerid) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
         val item1 = itemservice.findById(reqitem.id) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
 
-        val item2 = SoldItem(item1.name, item1.explanation, user1, user2, item1.price, item1.img)
+        val item2 = SoldItem(item1.name, item1.explanation, item1.exhibitor, user, item1.price, item1.img)
         solditemservice.save(item2)
 
         itemservice.deleteById(reqitem.id)

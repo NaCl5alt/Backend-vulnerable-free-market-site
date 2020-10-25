@@ -16,4 +16,9 @@ class AccountServiceImpl(private val repository: AccountRepository) : AccountSer
     override fun findByUsers(users: Users): Account? {
         return repository.findByUsers(users)
     }
+
+    @Transactional(timeout = 10)
+    override fun deleteByUsers(user: Users) {
+        repository.deleteByUsers(user)
+    }
 }
