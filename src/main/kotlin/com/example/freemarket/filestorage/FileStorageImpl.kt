@@ -29,10 +29,17 @@ class FileStorageImpl : FileStorage {
      */
     override fun store(file: MultipartFile, path: String) {
         when (path) {
+            "user" -> if (Files.notExists(Paths.get("img/user/" + file.originalFilename))) Files.copy(file.inputStream, this.userLocation.resolve(file.originalFilename))
+            "item" -> if (Files.notExists(Paths.get("img/item/" + file.originalFilename))) Files.copy(file.inputStream, this.itemLocation.resolve(file.originalFilename))
+            else -> if (Files.notExists(Paths.get("img/solditem/" + file.originalFilename))) Files.copy(file.inputStream, this.solditemLocation.resolve(file.originalFilename))
+        }
+        /*
+        when (path) {
             "user" -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/user/" + file.originalFilename))) Files.copy(file.inputStream, this.userLocation.resolve(file.originalFilename))
             "item" -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item/" + file.originalFilename))) Files.copy(file.inputStream, this.itemLocation.resolve(file.originalFilename))
             else -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/solditem/" + file.originalFilename))) Files.copy(file.inputStream, this.solditemLocation.resolve(file.originalFilename))
         }
+         */
     }
 
     override fun loadFile(filename: String): Resource {

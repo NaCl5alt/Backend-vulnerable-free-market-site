@@ -33,7 +33,6 @@ data class Item(
 data class RequestItem(
         var name: String,
         var explanation: String,
-        var exhibitorid: String,
         var price: Int,
         var img: String
 )

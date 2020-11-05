@@ -25,7 +25,10 @@ class ItemController(private val userservice: UserService, private val itemservi
             else verify = tokens.authenticateToken(token)
         } else return ResponseEntity(HttpStatus.BAD_REQUEST)
 
-        val user = userservice.findByUserid(reqitem.exhibitorid) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        if (reqitem.name.isBlank() or reqitem.explanation.isBlank() or reqitem.img.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        val user = userservice.findByUserid(tokens.getUseridFromToken(token))
+                ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
 
         val item = Item(reqitem.name, reqitem.explanation, user, reqitem.price, reqitem.img)
         itemservice.save(item)
