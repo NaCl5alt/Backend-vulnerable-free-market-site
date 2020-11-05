@@ -15,31 +15,30 @@ import java.util.stream.Stream
 class FileStorageImpl : FileStorage {
 
     val log = LoggerFactory.getLogger(this::class.java)
-
+/*
     val rootLocation = Paths.get("img")
     val userLocation = Paths.get("img/user")
     val itemLocation = Paths.get("img/item")
     val solditemLocation = Paths.get("img/solditem")
-
-    /*
+*/
         val rootLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img")
         val userLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/user")
         val itemLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item")
         val solditemLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/solditem")
-     */
     override fun store(file: MultipartFile, path: String) {
+/*
         when (path) {
             "user" -> if (Files.notExists(Paths.get("img/user/" + file.originalFilename))) Files.copy(file.inputStream, this.userLocation.resolve(file.originalFilename))
             "item" -> if (Files.notExists(Paths.get("img/item/" + file.originalFilename))) Files.copy(file.inputStream, this.itemLocation.resolve(file.originalFilename))
             else -> if (Files.notExists(Paths.get("img/solditem/" + file.originalFilename))) Files.copy(file.inputStream, this.solditemLocation.resolve(file.originalFilename))
         }
-        /*
+
+ */
         when (path) {
             "user" -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/user/" + file.originalFilename))) Files.copy(file.inputStream, this.userLocation.resolve(file.originalFilename))
             "item" -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item/" + file.originalFilename))) Files.copy(file.inputStream, this.itemLocation.resolve(file.originalFilename))
             else -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/solditem/" + file.originalFilename))) Files.copy(file.inputStream, this.solditemLocation.resolve(file.originalFilename))
         }
-         */
     }
 
     override fun loadFile(filename: String): Resource {
