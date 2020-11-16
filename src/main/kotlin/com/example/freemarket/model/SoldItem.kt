@@ -34,6 +34,5 @@ data class SoldItem(
 )
 
 data class RequestSoldItem(
-        var buyerid: String,
         var id: UUID
 )

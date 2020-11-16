@@ -22,7 +22,7 @@ data class Users(
         @Column(nullable = false, updatable = false)
         var createdAt: LocalDateTime = LocalDateTime.now(),
         @Column(nullable = false)
-        var updatedAst: LocalDateTime = LocalDateTime.now()
+        var updatedAt: LocalDateTime = LocalDateTime.now()
 )
 
 data class RegistUser(
