@@ -25,7 +25,10 @@ class SearchController {
                     "postgres", "postgres")
             stmt = conn.createStatement()
             res = stmt.executeQuery("select * from item where name like '%${keyword}%'")
+            var flag = false
             while (res.next()) {
+                if (flag) ans += ",\n"
+                else flag = true
                 ans += "{\n" +
                         "\"id\": \"${res.getString(1)}\",\n" +
                         "\"created_at\": \"${res.getString(2)}\",\n" +
@@ -34,7 +37,7 @@ class SearchController {
                         "\"name\": \"${res.getString(5)}\",\n" +
                         "\"price\": ${res.getString(6)},\n" +
                         "\"update_at\": \"${res.getString(7)}\"\n" +
-                        "},\n"
+                        "}"
             }
             ans += "]"
         } catch (ex: SQLException) {
@@ -58,7 +61,7 @@ class SearchController {
         }
 
         val headers = HttpHeaders()
-        headers.contentType = MediaType("text", "json", Charset.forName("utf-8"))
+        headers.contentType = MediaType("application", "json", Charset.forName("utf-8"))
 
         return ResponseEntity(ans, headers, HttpStatus.OK)
     }
