@@ -1,6 +1,7 @@
 package com.example.freemarket.service
 
 import com.example.freemarket.model.Item
+import com.example.freemarket.model.Users
 import java.time.LocalDateTime
 import java.util.*
 
@@ -13,4 +14,5 @@ interface ItemService {
     fun paging(time: LocalDateTime): Iterable<Item>
     fun firstItem(): Item
     fun count(): Long
+    fun findByExhibitor(user: Users): Iterable<Item>
 }

@@ -1,5 +1,6 @@
 package com.example.freemarket.controller
 
+import com.example.freemarket.filestorage.FileStorage
 import com.example.freemarket.logger
 import com.example.freemarket.model.Item
 import com.example.freemarket.model.RequestItem
@@ -12,7 +13,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @RestController
-class ItemController(private val userservice: UserService, private val itemservice: ItemService) {
+class ItemController(private val userservice: UserService, private val itemservice: ItemService, private val fileStorage: FileStorage) {
     val tokens = Token()
 
     @PostMapping("/item")
@@ -37,7 +38,18 @@ class ItemController(private val userservice: UserService, private val itemservi
     }
 
     @GetMapping("/item")
-    fun findAll() = itemservice.findAll()
+    fun findByUser(@CookieValue token: String?): ResponseEntity<Iterable<Item>> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        val user = userservice.findByUserid(tokens.getUseridFromToken(token))
+                ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        return ResponseEntity(itemservice.findByExhibitor(user), HttpStatus.OK)
+    }
 
     @GetMapping("/item/paging")
     fun paging(@RequestParam time: String) = ResponseEntity(itemservice.paging(LocalDateTime.parse(time)), HttpStatus.OK)
@@ -50,4 +62,22 @@ class ItemController(private val userservice: UserService, private val itemservi
 
     @GetMapping("/item/{id}")
     fun findById(@PathVariable id: UUID) = itemservice.findById(id)
+
+    @DeleteMapping("/item/{id}")
+    fun deleteById(@CookieValue token: String?, @PathVariable id: UUID): ResponseEntity<String> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        val item = itemservice.findById(id) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        if (item.exhibitor.userid != tokens.getUseridFromToken(token)) return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        fileStorage.deleteFile(item.img)
+
+        itemservice.deleteById(id)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
 }

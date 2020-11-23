@@ -1,6 +1,7 @@
 package com.example.freemarket.service
 
 import com.example.freemarket.model.Item
+import com.example.freemarket.model.Users
 import com.example.freemarket.repo.ItemRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -41,5 +42,9 @@ class ItemServiceImpl(private val repository: ItemRepository) : ItemService {
 
     override fun count(): Long {
         return repository.count()
+    }
+
+    override fun findByExhibitor(user: Users): Iterable<Item> {
+        return repository.findByExhibitor(user)
     }
 }

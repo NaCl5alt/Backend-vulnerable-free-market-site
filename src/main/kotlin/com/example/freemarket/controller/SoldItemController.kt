@@ -16,13 +16,6 @@ import java.util.*
 @RestController
 class SoldItemController(private val userservice: UserService, private val solditemservice: SoldItemService, private val itemservice: ItemService) {
     val tokens = Token()
-    val itemLocation = Paths.get("img/item")
-    val solditemLocation = Paths.get("img/solditem")
-    /*
-        val itemLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item")
-        val solditemLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/solditem")
-
-     */
 
     @PostMapping("/solditem")
     fun regist(@CookieValue token: String?, @RequestBody reqitem: RequestSoldItem): ResponseEntity<RequestSoldItem> {
@@ -55,8 +48,33 @@ class SoldItemController(private val userservice: UserService, private val soldi
         return ResponseEntity(HttpStatus.CREATED)
     }
 
-    @GetMapping("/solditem")
-    fun findAll() = solditemservice.findAll()
+    @GetMapping("/solditem/exhibitor")
+    fun findByExhibitor(@CookieValue token: String?): ResponseEntity<Iterable<SoldItem>> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        val user = userservice.findByUserid(tokens.getUseridFromToken(token))
+                ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        return ResponseEntity(solditemservice.findByExhibitor(user), HttpStatus.OK)
+    }
+
+    @GetMapping("/solditem/buyer")
+    fun findByBuyer(@CookieValue token: String?): ResponseEntity<Iterable<SoldItem>> {
+        var verify: Boolean
+        if (token != null) {
+            if (token.isEmpty() or token.isBlank()) return ResponseEntity(HttpStatus.BAD_REQUEST)
+            else verify = tokens.authenticateToken(token)
+        } else return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        val user = userservice.findByUserid(tokens.getUseridFromToken(token))
+                ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+
+        return ResponseEntity(solditemservice.findByBuyer(user), HttpStatus.OK)
+    }
 
     @GetMapping("/solditem/{id}")
     fun findById(@PathVariable id: UUID) = solditemservice.findById(id)

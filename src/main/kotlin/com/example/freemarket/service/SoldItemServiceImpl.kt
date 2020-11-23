@@ -1,6 +1,7 @@
 package com.example.freemarket.service
 
 import com.example.freemarket.model.SoldItem
+import com.example.freemarket.model.Users
 import com.example.freemarket.repo.SoldItemRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,5 +24,13 @@ class SoldItemServiceImpl(private val repository: SoldItemRepository) : SoldItem
     @Transactional(timeout = 10)
     override fun save(item: SoldItem) {
         repository.save(item)
+    }
+
+    override fun findByExhibitor(user: Users): Iterable<SoldItem> {
+        return repository.findByExhibitor(user)
+    }
+
+    override fun findByBuyer(user: Users): Iterable<SoldItem> {
+        return repository.findByBuyer(user)
     }
 }

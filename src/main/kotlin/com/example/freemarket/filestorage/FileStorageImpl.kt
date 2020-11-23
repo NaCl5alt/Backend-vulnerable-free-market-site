@@ -52,6 +52,11 @@ class FileStorageImpl : FileStorage {
         }
     }
 
+    override fun deleteFile(filename: String) {
+//        if (Files.notExists(Paths.get("img/item/$filename"))) FileSystemUtils.deleteRecursively(Paths.get("img/item/$filename"))
+        if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item/$filename"))) FileSystemUtils.deleteRecursively(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item/$filename"))
+    }
+
     override fun deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile())
         FileSystemUtils.deleteRecursively(userLocation.toFile())
