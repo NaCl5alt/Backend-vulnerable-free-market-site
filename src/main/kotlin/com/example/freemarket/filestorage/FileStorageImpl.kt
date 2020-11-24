@@ -25,19 +25,19 @@ class FileStorageImpl : FileStorage {
         val userLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/user")
         val itemLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item")
         val solditemLocation = Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/solditem")
-    override fun store(file: MultipartFile, path: String) {
+    override fun store(file: MultipartFile, path: String, filename: String) {
 /*
         when (path) {
-            "user" -> if (Files.notExists(Paths.get("img/user/" + file.originalFilename))) Files.copy(file.inputStream, this.userLocation.resolve(file.originalFilename))
-            "item" -> if (Files.notExists(Paths.get("img/item/" + file.originalFilename))) Files.copy(file.inputStream, this.itemLocation.resolve(file.originalFilename))
-            else -> if (Files.notExists(Paths.get("img/solditem/" + file.originalFilename))) Files.copy(file.inputStream, this.solditemLocation.resolve(file.originalFilename))
+            "user" -> if (Files.notExists(Paths.get("img/user/$filename"))) Files.copy(file.inputStream, this.userLocation.resolve(filename))
+            "item" -> if (Files.notExists(Paths.get("img/item/$filename"))) Files.copy(file.inputStream, this.itemLocation.resolve(filename))
+            else -> if (Files.notExists(Paths.get("img/solditem/$filename"))) Files.copy(file.inputStream, this.solditemLocation.resolve(filename))
         }
 
  */
         when (path) {
-            "user" -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/user/" + file.originalFilename))) Files.copy(file.inputStream, this.userLocation.resolve(file.originalFilename))
-            "item" -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item/" + file.originalFilename))) Files.copy(file.inputStream, this.itemLocation.resolve(file.originalFilename))
-            else -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/solditem/" + file.originalFilename))) Files.copy(file.inputStream, this.solditemLocation.resolve(file.originalFilename))
+            "user" -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/user/$filename"))) Files.copy(file.inputStream, this.userLocation.resolve(filename))
+            "item" -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/item/$filename"))) Files.copy(file.inputStream, this.itemLocation.resolve(filename))
+            else -> if (Files.notExists(Paths.get("/opt/apache-tomcat-9.0.30/webapps/freemarket/img/solditem/$filename"))) Files.copy(file.inputStream, this.solditemLocation.resolve(filename))
         }
     }
 

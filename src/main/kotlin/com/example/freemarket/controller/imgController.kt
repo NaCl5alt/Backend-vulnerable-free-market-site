@@ -1,7 +1,6 @@
 package com.example.freemarket.controller
 
 import com.example.freemarket.filestorage.FileStorage
-import com.example.freemarket.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
+import java.util.*
 
 @Controller
 class imgController(private val fileStorage: FileStorage) {
@@ -24,10 +24,9 @@ class imgController(private val fileStorage: FileStorage) {
         } else return ResponseEntity(HttpStatus.BAD_REQUEST)
 
         return if (Regex("image/.*").containsMatchIn(file.contentType.toString())) {
-            logger.info(file.name)
-            logger.info(file.originalFilename)
-            fileStorage.store(file, "user")
-            ResponseEntity(file.originalFilename, HttpStatus.CREATED)
+            val filename = UUID.randomUUID().toString()
+            fileStorage.store(file, "user", filename)
+            ResponseEntity(filename, HttpStatus.CREATED)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
 
@@ -39,8 +38,9 @@ class imgController(private val fileStorage: FileStorage) {
             else verify = tokens.authenticateToken(token)
         } else return ResponseEntity(HttpStatus.BAD_REQUEST)
         return if (Regex("image/.*").containsMatchIn(file.contentType.toString())) {
-            fileStorage.store(file, "item")
-            ResponseEntity(file.originalFilename, HttpStatus.CREATED)
+            val filename = UUID.randomUUID().toString()
+            fileStorage.store(file, "item", filename)
+            ResponseEntity(filename, HttpStatus.CREATED)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
 
@@ -52,8 +52,9 @@ class imgController(private val fileStorage: FileStorage) {
             else verify = tokens.authenticateToken(token)
         } else return ResponseEntity(HttpStatus.BAD_REQUEST)
         return if (Regex("image/.*").containsMatchIn(file.contentType.toString())) {
-            fileStorage.store(file, "solditem")
-            ResponseEntity(file.originalFilename, HttpStatus.CREATED)
+            val filename = UUID.randomUUID().toString()
+            fileStorage.store(file, "solditem", filename)
+            ResponseEntity(filename, HttpStatus.CREATED)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
 }
