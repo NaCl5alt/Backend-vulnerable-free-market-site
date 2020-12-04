@@ -24,7 +24,13 @@ class imgController(private val fileStorage: FileStorage) {
         } else return ResponseEntity(HttpStatus.BAD_REQUEST)
 
         return if (Regex("image/.*").containsMatchIn(file.contentType.toString())) {
-            val filename = UUID.randomUUID().toString()
+            var ext = ""
+            when (file.contentType.toString()) {
+                "image/png" -> ext = ".png"
+                "image/jpeg" -> ext = ".jpeg"
+                "image/gif" -> ext = ".gif"
+            }
+            val filename = UUID.randomUUID().toString() + ext
             fileStorage.store(file, "user", filename)
             ResponseEntity(filename, HttpStatus.CREATED)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
@@ -38,7 +44,13 @@ class imgController(private val fileStorage: FileStorage) {
             else verify = tokens.authenticateToken(token)
         } else return ResponseEntity(HttpStatus.BAD_REQUEST)
         return if (Regex("image/.*").containsMatchIn(file.contentType.toString())) {
-            val filename = UUID.randomUUID().toString()
+            var ext = ""
+            when (file.contentType.toString()) {
+                "image/png" -> ext = ".png"
+                "image/jpeg" -> ext = ".jpeg"
+                "image/gif" -> ext = ".gif"
+            }
+            val filename = UUID.randomUUID().toString() + ext
             fileStorage.store(file, "item", filename)
             ResponseEntity(filename, HttpStatus.CREATED)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
@@ -52,7 +64,13 @@ class imgController(private val fileStorage: FileStorage) {
             else verify = tokens.authenticateToken(token)
         } else return ResponseEntity(HttpStatus.BAD_REQUEST)
         return if (Regex("image/.*").containsMatchIn(file.contentType.toString())) {
-            val filename = UUID.randomUUID().toString()
+            var ext = ""
+            when (file.contentType.toString()) {
+                "image/png" -> ext = ".png"
+                "image/jpeg" -> ext = ".jpeg"
+                "image/gif" -> ext = ".gif"
+            }
+            val filename = UUID.randomUUID().toString() + ext
             fileStorage.store(file, "solditem", filename)
             ResponseEntity(filename, HttpStatus.CREATED)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
